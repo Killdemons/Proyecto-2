@@ -104,4 +104,52 @@ public class Vehiculos {
             System.out.println("Error de conexión: " + e);
         }
     }
+    
+    public static void buscar(String placa) {
+        Conexion();
+        try {
+            s = connection.createStatement();
+            rs = s.executeQuery("SELECT placa, marcaid, modeloid, estiloid, transmision, año, precio, estado, foto FROM vehiculo WHERE placa = '" + placa + "'");
+            while (rs.next()) {
+                Interfaz.Vehiculos.mod.add(rs.getString("placa"));
+                Interfaz.Vehiculos.mod.add(rs.getString("marcaid"));
+                Interfaz.Vehiculos.mod.add(rs.getString("modeloid"));
+                Interfaz.Vehiculos.mod.add(rs.getString("estiloid"));
+                Interfaz.Vehiculos.mod.add(rs.getString("transmision"));
+                Interfaz.Vehiculos.mod.add(rs.getString("año"));
+                Interfaz.Vehiculos.mod.add(rs.getString("precio"));
+                Interfaz.Vehiculos.mod.add(rs.getString("estado"));
+                Interfaz.Vehiculos.mod.add(rs.getString("foto"));
+            }
+            rs = s.executeQuery("SELECT id, nombre FROM marcas WHERE id = '" + Interfaz.Vehiculos.mod.get(1).toString() + "'");
+            while (rs.next()) {
+                Interfaz.Vehiculos.mod.set(1, rs.getString("nombre"));
+            }
+            rs = s.executeQuery("SELECT id, nombre, id_marcas FROM modelo WHERE id = '" + Interfaz.Vehiculos.mod.get(2).toString() + "'");
+            while (rs.next()) {
+                Interfaz.Vehiculos.mod.set(2, rs.getString("nombre"));
+            }
+            rs = s.executeQuery("SELECT id, nombre FROM estilo WHERE id = '" + Interfaz.Vehiculos.mod.get(3).toString() + "'");
+            while (rs.next()) {
+                Interfaz.Vehiculos.mod.set(3, rs.getString("nombre"));
+            }
+        } catch (Exception e) {
+            System.out.println("Error de conexión: " + e);
+        }
+    }
+
+    public static void eliminar(String placa) {
+        Conexion();
+        try {
+            s = connection.createStatement();
+            int z = s.executeUpdate("DELETE FROM vehiculo WHERE placa = '" + placa + "'");
+            if (z == 1) {
+                System.out.println("Se elimino el registro de manera exitosa");
+            } else {
+                System.out.println("Error al eliminar el registro");
+            }
+        } catch (Exception e) {
+            System.out.println("Error de conexión: " + e);
+        }
+    }
 }
